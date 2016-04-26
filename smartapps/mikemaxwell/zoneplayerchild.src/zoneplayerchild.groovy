@@ -181,7 +181,7 @@ def manActive(){
 }
 
 def motionActive(){
-	def now = evt.date.getTime()
+	def now = now()
 	def enable
     def window = settings.zoneTimeout.toInteger() * 1000
     if (window == 0){
