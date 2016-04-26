@@ -86,7 +86,7 @@ def main(){
                     ,multiple		: false
                     ,required		: true
                     ,type			: "enum"
-                    ,options		: [[".1":"10%"],[".2":"20%"],[".3":"30%"],[".5":"50%"],[".6":"60%"],[".7":"70%"],[".8":"80%"],[".9":"90%"],["1":"100%"]]
+                    ,options		: [[".1":"10%"],[".2":"20%"],[".3":"30%"],[".4":"40%"],[".5":"50%"],[".6":"60%"],[".7":"70%"],[".8":"80%"],[".9":"90%"],["1":"100%"]]
                     ,defaultValue	: "1"
                 )
                 input(
@@ -168,10 +168,17 @@ def exec(cmd,p){
 }
 
 def activateMute(enable){
+	log.info "activateMute: ${enable} muteSwitch: ${muteSwitch}"
 	if (muteSwitch){
-    	if (enable) muteSwitch.on()
-        else muteSwitch.off()
-    }
+    	
+    	if (enable){
+        	muteSwitch.on()
+            log.info "yup, on"
+        } else {
+        	muteSwitch.off()
+            log.info "yup, off"
+        }
+    } else log.info "nope..."
 }
 
 def manActive(){
