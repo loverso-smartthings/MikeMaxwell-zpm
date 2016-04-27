@@ -150,12 +150,14 @@ def exec(cmd,p){
         	case ["playTextAndResume","playTextAndRestore"] :
             	text = p[0]
                 level = level + (p[1].toInteger() * zoneVolume.toFloat()).toInteger()
+                log.info "${cmd} text: ${text}, requestLevel: ${p[1]},  sentLevel: ${level}"
         		zonePlayers."${cmd}"(text,level)    	
                 break
             case ["playTrackAndResume","playTrackAndRestore"] :
             	text = p[0]
                 duration = p[1]
                 level = level + (p[2].toInteger() * zoneVolume.toFloat()).toInteger()
+                log.info "${cmd} text: ${text}, duration: ${duration}, requestLevel: ${p[2]}, sentLevel: ${level}"
         		zonePlayers."${cmd}"(text,duration,level)    	
             	break
     	}
