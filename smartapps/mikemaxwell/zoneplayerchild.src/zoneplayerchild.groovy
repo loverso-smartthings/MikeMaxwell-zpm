@@ -37,13 +37,8 @@ def updated() {
 }
 
 def initialize() {
-	//state.vChild = "1.0.0"
-    //parent.updateVer(state.vChild)
-	//state.nextRunTime = 0
-	//state.zoneTriggerActive = false
-	//subscribe(motionSensors, "motion", motionHandler)
-    //subscribe(motionSensors, "motion.active", activeHandler)
     app.updateLabel("${settings.zoneName} Sound Zone") 
+    state.clear()
 }
 
 
@@ -113,6 +108,13 @@ def main(){
                		,type		: "capability.switch"
            		) 
 				input(
+           			name		: "muteAV"
+               		,title		: "Main AV mute"
+               		,multiple	: false
+              		,required	: false
+               		,type		: "capability.musicPlayer"
+           		) 
+				input(
            			name			: "volBoostActivate"
                		,title			: "Switch for volume boost/cut"
                		,multiple		: false
@@ -136,9 +138,7 @@ def main(){
 }
 
 def exec(cmd,p){
-	//log.info "${motionSensors.currentValue("motion")}"
-    //zoneVolume
-    log.info "cmd: ${cmd}, params: ${p}"
+    log.info "cmd: ${cmd}, params: ${p}" //, model: ${player?.currentState("model")}"
     def text //= p[0]
     def level = 0
     if (volBoostActivate && volBoostActivate.currentValue("switch").contains("on")) level = volBoostLevel.toInteger()
@@ -149,10 +149,11 @@ def exec(cmd,p){
 		switch (cmd) {
         	case ["playTextAndResume","playTextAndRestore"] :
             	text = p[0]
+                def sound = textToSpeech(text)
                 level = level + (p[1].toInteger() * zoneVolume.toFloat()).toInteger()
                 log.info "${cmd} text: ${text}, requestLevel: ${p[1]},  sentLevel: ${level}"
         		zonePlayers."${cmd}"(text,level)    	
-                break
+				break
             case ["playTrackAndResume","playTrackAndRestore"] :
             	text = p[0]
                 duration = p[1]
@@ -161,26 +162,26 @@ def exec(cmd,p){
         		zonePlayers."${cmd}"(text,duration,level)    	
             	break
     	}
-    	log.info "fire it!"
+    	log.info "TTS sent"
         activateMute(false)
-    	//zonePlayers."${cmd}"(text,level)    
     } else {
-    	log.info "nope, not right now..."
+    	log.info "TTS not sent"
     }
 }
 
 def activateMute(enable){
 	log.info "activateMute: ${enable} muteSwitch: ${muteSwitch}"
-	if (muteSwitch){
-    	
+	if (muteSwitch || muteAV){
     	if (enable){
-        	muteSwitch.on()
-            log.info "yup, on"
+        	muteSwitch?.on()
+            muteAV?.mute()
+            log.info "mute enabled"
         } else {
-        	muteSwitch.off()
-            log.info "yup, off"
+        	muteSwitch?.off()
+            muteAV?.unmute()
+            log.info "mute disabled"
         }
-    } else log.info "nope..."
+    } //else log.info "nope, mute not switch not selected"
 }
 
 def manActive(){
