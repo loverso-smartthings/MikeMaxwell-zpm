@@ -16,7 +16,7 @@
 metadata {
 	definition (name: "simulatedMusicPlayer", namespace: "MikeMaxwell", author: "Mike Maxwell") {
 		capability 	"Music Player"
-		command "tileSetLevel"			, ["number"]
+		//command "tileSetLevel"			, ["number"]
 		//command "playTrackAtVolume"		, ["string","number"]
 		command "playTrackAndResume"	, ["string","number","number"]
 		command "playTextAndResume"		, ["string","number"]
@@ -28,21 +28,19 @@ metadata {
 	simulator {
 		// TODO: define status and reply messages here
 	}
-
-	tiles {
-		// TODO: define your main and details tiles here
+	tiles(scale: 2) {
+  		multiAttributeTile(name:"switch", type:"generic", width:6, height:4, canChangeicon: true) {
+    		tileAttribute("device.switch", key: "PRIMARY_CONTROL") {
+    			attributeState "default", label: "Online", action: "", backgroundColor: "#53a7c0", icon: "st.Electronics.electronics13"
+    		}
+		}
+		main "switch"
+		details "switch"
 	}
 }
 
-// parse events into attributes
 def parse(String description) {
 	log.debug "Parsing '${description}'"
-	// TODO: handle 'status' attribute
-	// TODO: handle 'level' attribute
-	// TODO: handle 'trackDescription' attribute
-	// TODO: handle 'trackData' attribute
-	// TODO: handle 'mute' attribute
-
 }
 //custom comands
 def playTrackAndResume(text,duration,level){
@@ -79,7 +77,6 @@ def playTextAndResume(text,level){
 
 def playTextAndRestore(text,level){
 	log.info "device playTextAndRestore- text: ${text}, level:${level}"
-    //parent.playTextAndRestore(text,level)
     sendEvent(
     	name	: "cmd"
     	,value	: "playTextAndRestore"
@@ -91,66 +88,66 @@ def playTextAndRestore(text,level){
 
 // handle commands
 def play() {
-	log.debug "Executing 'play'"
+	log.debug "'play' command is not implemented"
 	// TODO: handle 'play' command
 }
 
 def pause() {
-	log.debug "Executing 'pause'"
+	log.debug "'pause' command is not implemented"
 	// TODO: handle 'pause' command
 }
 
 def stop() {
-	log.debug "Executing 'stop'"
+	log.debug "'stop' command is not implemented"
 	// TODO: handle 'stop' command
 }
 
 def nextTrack() {
-	log.debug "Executing 'nextTrack'"
+	log.debug "'nextTrack' command is not implemented"
 	// TODO: handle 'nextTrack' command
 }
 
 def playTrack() {
-	log.debug "Executing 'playTrack'"
+	log.debug "'playTrack' command is not implemented"
 	// TODO: handle 'playTrack' command
 }
 
 def setLevel() {
-	log.debug "Executing 'setLevel'"
+	log.debug "'setLevel' command is not implemented"
 	// TODO: handle 'setLevel' command
 }
 
 def playText(text) {
-	log.debug "Executing 'playText'"
+	log.debug "'playText' command is not implemented"
 	// TODO: handle 'playText' command
 }
 
 def mute() {
-	log.debug "Executing 'mute'"
+	log.debug "'mute' command is not implemented"
 	// TODO: handle 'mute' command
 }
 
 def previousTrack() {
-	log.debug "Executing 'previousTrack'"
+	log.debug "'previousTrack' command is not implemented"
 	// TODO: handle 'previousTrack' command
 }
 
 def unmute() {
-	log.debug "Executing 'unmute'"
+	log.debug "'unmute' command is not implemented"
 	// TODO: handle 'unmute' command
 }
 
 def setTrack() {
-	log.debug "Executing 'setTrack'"
+	log.debug "'setTrack' command is not implemented"
 	// TODO: handle 'setTrack' command
 }
 
 def resumeTrack() {
-	log.debug "Executing 'resumeTrack'"
+	log.debug "'resumeTrack' command is not implemented"
 	// TODO: handle 'resumeTrack' command
 }
 
 def restoreTrack() {
-	log.debug "Executing 'restoreTrack'"
+	log.debug "'restoreTrack' command is not implemented"
 	// TODO: handle 'restoreTrack' command
 }
