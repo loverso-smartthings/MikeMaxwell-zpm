@@ -191,13 +191,17 @@ def manActive(){
 }
 
 def motionActive(){
-	def now = now()
 	def enable
     def window = settings.zoneTimeout.toInteger() * 1000
+    //log.info "window: ${window}"
+    def evtStart = new Date(now() - window)
+    
+    //def dm = motionSensors.statesSince("motion", evtStart)
+    //log.info "motions: ${dm.value}, ${dm.date}" //, ${dm.date.getTime()}"
     if (window == 0){
     	enable = motionSensors.currentValue("motion").contains("active")
     } else {
-		enable = motionSensors.currentState("motion").any{ s -> s.value == "active" && (now - s.date.getTime()) < window}
+		enable = motionSensors.any{ s -> s.statesSince("motion", evtStart).size > 0}
     }
     return enable
 }
