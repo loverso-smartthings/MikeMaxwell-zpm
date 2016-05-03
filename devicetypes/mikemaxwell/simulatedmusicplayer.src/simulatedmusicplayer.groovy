@@ -16,7 +16,8 @@
 metadata {
 	definition (name: "simulatedMusicPlayer", namespace: "MikeMaxwell", author: "Mike Maxwell") {
 		capability 	"Music Player"
-		//command "tileSetLevel"			, ["number"]
+        capability "Polling"   
+ 		//command "tileSetLevel"			, ["number"]
 		//command "playTrackAtVolume"		, ["string","number"]
 		command "playTrackAndResume"	, ["string","number","number"]
 		command "playTextAndResume"		, ["string","number"]
@@ -38,51 +39,61 @@ metadata {
 		details "switch"
 	}
 }
+def updated(){
+	poll()
+}
 
 def parse(String description) {
 	log.debug "Parsing '${description}'"
+}
+def poll(){
+	sendEvent(
+    	name 			: "status"
+        ,value			: "playing"
+        ,isDisplayed 	: false
+    )
 }
 //custom comands
 def playTrackAndResume(text,duration,level){
 	log.info "device playTrackAndResume- text: ${text}, ${duration}, level:${level}"
     sendEvent(
-    	name	: "cmd"
-    	,value	: "playTrackAndResume"
-        ,displayed	: false
+    	name			: "cmd"
+    	,value			: "playTrackAndResume"
+        ,displayed		: false
         ,isStateChange	: true
-        ,data	: "${text},${duration},${level}"
+        ,data			: "${text},${duration},${level}"
     )    
 }
 
 def playTrackAndRestore(text,duration,level){
 	log.info "device playTrackAndRestore- text: ${text}, level:${level}"
     sendEvent(
-    	name	: "cmd"
-    	,value	: "playTrackAndRestore"
-        ,displayed	: false
+    	name			: "cmd"
+    	,value			: "playTrackAndRestore"
+        ,displayed		: false
         ,isStateChange	: true
-        ,data	: "${text},${duration},${level}"
+        ,data			: "${text},${duration},${level}"
     )    
 }
 def playTextAndResume(text,level){
 	log.info "device playTextAndResume- text: ${text}, level:${level}"
     sendEvent(
-    	name	: "cmd"
-    	,value	: "playTextAndResume"
-        ,displayed	: false
+    	name			: "cmd"
+    	,value			: "playTextAndResume"
+        ,displayed		: false
         ,isStateChange	: true
-        ,data	: "${text},${level}"
+        ,data			: "${text},${level}"
     )    
 }
 
 def playTextAndRestore(text,level){
 	log.info "device playTextAndRestore- text: ${text}, level:${level}"
     sendEvent(
-    	name	: "cmd"
-    	,value	: "playTextAndRestore"
-        ,displayed	: false
+    	name			: "cmd"
+    	,value			: "playTextAndRestore"
+        ,displayed		: false
         ,isStateChange	: true
-        ,data	: "${text},${level}"
+        ,data			: "${text},${level}"
     )
 }
 
@@ -107,18 +118,24 @@ def nextTrack() {
 	// TODO: handle 'nextTrack' command
 }
 
-def playTrack() {
-	log.debug "'playTrack' command is not implemented"
+def playTrack(Map trackData) {
+	log.debug "'playTrack' command is not implemented, trackData: ${trackData}"
 	// TODO: handle 'playTrack' command
 }
 
-def setLevel() {
-	log.debug "'setLevel' command is not implemented"
+def playTrack(String uri, metaData="") {
+	log.debug "'playTrack' command is not implemented, uri: ${uri}, metaData: ${metaData}"
+	// TODO: handle 'playTrack' command
+}
+
+
+def setLevel(level) {
+	log.debug "'setLevel' command is not implemented, level: ${level}"
 	// TODO: handle 'setLevel' command
 }
 
 def playText(text) {
-	log.debug "'playText' command is not implemented"
+	log.debug "'playText' command is not implemented, text: ${text}"
 	// TODO: handle 'playText' command
 }
 
@@ -137,17 +154,22 @@ def unmute() {
 	// TODO: handle 'unmute' command
 }
 
-def setTrack() {
-	log.debug "'setTrack' command is not implemented"
+def setTrack(Map trackData) {
+	log.debug "'setTrack' command is not implemented, trackData: ${trackData}"
 	// TODO: handle 'setTrack' command
 }
 
-def resumeTrack() {
-	log.debug "'resumeTrack' command is not implemented"
+def setTrack(String uri, metaData="") {
+	log.debug "'setTrack' command is not implemented, uri: ${uri}, metaData: ${metaData}"
+	// TODO: handle 'setTrack' command
+}
+
+def resumeTrack(Map trackData = null) {
+	log.debug "'resumeTrack' command is not implemented, trackData: ${trackData}"
 	// TODO: handle 'resumeTrack' command
 }
 
-def restoreTrack() {
-	log.debug "'restoreTrack' command is not implemented"
+def restoreTrack(Map trackData = null) {
+	log.debug "'restoreTrack' command is not implemented, trackData: ${trackData}"
 	// TODO: handle 'restoreTrack' command
 }
