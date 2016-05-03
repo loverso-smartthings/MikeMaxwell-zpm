@@ -109,7 +109,7 @@ def main(){
            		) 
 				input(
            			name		: "muteAV"
-               		,title		: "Main AV mute"
+               		,title		: "AV mute"
                		,multiple	: false
               		,required	: false
                		,type		: "capability.musicPlayer"
@@ -133,6 +133,13 @@ def main(){
                         ,defaultValue	: "20"
                     )
                 }
+                input(
+                	name			: "forcePlay"
+                    ,title			: "Force play on resume?"
+                    ,required		: false
+                    ,type			: "bool"
+                    ,defaultValue	: false
+               	)
 			} //end section optional settings
 	}
 }
@@ -152,7 +159,8 @@ def exec(cmd,p){
                 def sound = textToSpeech(text)
                 level = level + (p[1].toInteger() * zoneVolume.toFloat()).toInteger()
                 log.info "${cmd} text: ${text}, requestLevel: ${p[1]},  sentLevel: ${level}"
-        		zonePlayers."${cmd}"(text,level)    	
+        		zonePlayers."${cmd}"(text,level)
+                log.info "TTS sent"
 				break
             case ["playTrackAndResume","playTrackAndRestore"] :
             	text = p[0]
@@ -160,12 +168,16 @@ def exec(cmd,p){
                 level = level + (p[2].toInteger() * zoneVolume.toFloat()).toInteger()
                 log.info "${cmd} text: ${text}, duration: ${duration}, requestLevel: ${p[2]}, sentLevel: ${level}"
         		zonePlayers."${cmd}"(text,duration,level)    	
+                log.info "MP3 played"
             	break
     	}
-    	log.info "TTS sent"
+    	if (forcePlay && cmd.contains("Resume")){
+        	log.info "force play called..."
+        	zonePlayers.play()
+        }
         activateMute(false)
     } else {
-    	log.info "TTS not sent"
+    	log.info "Nothing sent/played..."
     }
 }
 
