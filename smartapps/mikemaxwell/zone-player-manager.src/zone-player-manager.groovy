@@ -17,7 +17,7 @@ definition(
     name: "Zone Player Manager",
     namespace: "MikeMaxwell",
     author: "Mike Maxwell",
-    description: "Zone Player Manager",
+    description: "Zone Player Manager 1.0.0",
     category: "My Apps",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Solution/areas.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Solution/areas@2x.png",
@@ -36,8 +36,6 @@ def updated() {
 }
 
 def initialize() {
-	//state.vChild = "1.0.0"
-    //parent.updateVer(state.vChild)
     def hub = location.hubs.first().hub
     def deviceID = "${app.id}"
     def zName = "virtualMusicPlayer"
@@ -73,16 +71,5 @@ def main(){
         			app(name: "childZones", appName: "zonePlayerChild", namespace: "MikeMaxwell", description: "Create New Player Zone...", multiple: true)	
                 }
             }
-            section("Optional settings"){
-             	/*
-             	input(
-                        name		: "modes"
-                        ,type		: "mode"
-                        ,title		: "Set for specific mode(s)"
-                        ,multiple	: true
-                        ,required	: false
-                )
-                */
-            } //end section optional settings
 	}
 }

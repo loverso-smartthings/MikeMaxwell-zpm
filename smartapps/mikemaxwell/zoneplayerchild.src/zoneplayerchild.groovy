@@ -17,7 +17,7 @@ definition(
     name: "zonePlayerChild",
     namespace: "MikeMaxwell",
     author: "Mike Maxwell",
-    description: "child application for 'Zone Player Manager', do not install directly.",
+    description: "child application 1.0.0 for 'Zone Player Manager', do not install directly.",
     category: "My Apps",
     parent: "MikeMaxwell:Zone Player Manager",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
@@ -26,8 +26,8 @@ definition(
 
 preferences {
 	page(name: "main")
-    //page(name: "triggers", nextPage	: "main")
 }
+
 def installed() {
 }
 
@@ -62,7 +62,7 @@ def main(){
 					input(
             			name		: "zonePlayers"
                 		,title		: "Music Players"
-                		,multiple	: true
+                		,multiple	: false
                 		,required	: true
                 		,type		: "capability.musicPlayer"
             		)                    
@@ -77,7 +77,7 @@ def main(){
             section("Optional settings"){
                 input(
                     name			: "zoneVolume" 
-                    ,title			: "zone level percent"
+                    ,title			: "Zone volume level (percent of requested) "
                     ,multiple		: false
                     ,required		: true
                     ,type			: "enum"
@@ -95,28 +95,28 @@ def main(){
                 )
 				input(
            			name		: "manActivate"
-               		,title		: "Switches for manual activation"
+               		,title		: "Manual zone activation switches"
                		,multiple	: true
               		,required	: false
                		,type		: "capability.switch"
            		) 
 				input(
            			name		: "muteSwitch"
-               		,title		: "Switch to activate while zone is playing"
+               		,title		: "Switch to activate during message"
                		,multiple	: false
               		,required	: false
                		,type		: "capability.switch"
            		) 
 				input(
            			name		: "muteAV"
-               		,title		: "AV mute"
+               		,title		: "AV mute to activate during message"
                		,multiple	: false
               		,required	: false
                		,type		: "capability.musicPlayer"
            		) 
 				input(
            			name			: "volBoostActivate"
-               		,title			: "Switch for volume boost/cut"
+               		,title			: "Volume boost/cut override switch"
                		,multiple		: false
               		,required		: false
                		,type			: "capability.switch"
@@ -125,7 +125,7 @@ def main(){
                 if (volBoostActivate){
                     input(
                         name			: "volBoostLevel" 
-                        ,title			: "volume boost or cut"
+                        ,title			: "Volume boost or cut during message"
                         ,multiple		: false
                         ,required		: false
                         ,type			: "enum"
@@ -133,19 +133,13 @@ def main(){
                         ,defaultValue	: "20"
                     )
                 }
-                input(
-                	name			: "forcePlay"
-                    ,title			: "Force play on resume?"
-                    ,required		: false
-                    ,type			: "bool"
-                    ,defaultValue	: false
-               	)
 			} //end section optional settings
 	}
 }
 
 def exec(cmd,p){
-    log.info "cmd: ${cmd}, params: ${p}" //, model: ${player?.currentState("model")}"
+    log.info "cmd: ${cmd}, params: ${p[0]}" //, model: ${player?.currentState("model")}"
+    def params = p[0].tokenize("~")
     def text //= p[0]
     def level = 0
     if (volBoostActivate && volBoostActivate.currentValue("switch").contains("on")) level = volBoostLevel.toInteger()
@@ -155,26 +149,22 @@ def exec(cmd,p){
     	activateMute(true)
 		switch (cmd) {
         	case ["playTextAndResume","playTextAndRestore"] :
-            	text = p[0]
-                def sound = textToSpeech(text)
-                level = level + (p[1].toInteger() * zoneVolume.toFloat()).toInteger()
-                log.info "${cmd} text: ${text}, requestLevel: ${p[1]},  sentLevel: ${level}"
+            	text = params[0]
+                //def sound = textToSpeech(text)
+                level = level + (params[1].toInteger() * zoneVolume.toFloat()).toInteger()
+                log.info "${cmd} text: ${text}, requestLevel: ${params[1]},  sentLevel: ${level}"
         		zonePlayers."${cmd}"(text,level)
                 log.info "TTS sent"
 				break
             case ["playTrackAndResume","playTrackAndRestore"] :
-            	text = p[0]
-                duration = p[1]
-                level = level + (p[2].toInteger() * zoneVolume.toFloat()).toInteger()
-                log.info "${cmd} text: ${text}, duration: ${duration}, requestLevel: ${p[2]}, sentLevel: ${level}"
+            	text = params[0]
+                duration = params[1].toInteger()
+                level = level + (params[2].toInteger() * zoneVolume.toFloat()).toInteger()
+                log.info "${cmd} text: ${text}, duration: ${duration}, requestLevel: ${params[2]}, sentLevel: ${level}"
         		zonePlayers."${cmd}"(text,duration,level)    	
                 log.info "MP3 played"
             	break
     	}
-    	if (forcePlay && cmd.contains("Resume")){
-        	log.info "force play called..."
-        	zonePlayers.play()
-        }
         activateMute(false)
     } else {
     	log.info "Nothing sent/played..."
@@ -182,7 +172,7 @@ def exec(cmd,p){
 }
 
 def activateMute(enable){
-	log.info "activateMute: ${enable} muteSwitch: ${muteSwitch}"
+	log.info "activateMute: ${enable}, muteSwitch: ${muteSwitch}, muteAV: ${muteAV}"
 	if (muteSwitch || muteAV){
     	if (enable){
         	muteSwitch?.on()
@@ -207,9 +197,6 @@ def motionActive(){
     def window = settings.zoneTimeout.toInteger() * 1000
     //log.info "window: ${window}"
     def evtStart = new Date(now() - window)
-    
-    //def dm = motionSensors.statesSince("motion", evtStart)
-    //log.info "motions: ${dm.value}, ${dm.date}" //, ${dm.date.getTime()}"
     if (window == 0){
     	enable = motionSensors.currentValue("motion").contains("active")
     } else {
