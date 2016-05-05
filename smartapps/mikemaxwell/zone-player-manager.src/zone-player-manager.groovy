@@ -70,6 +70,10 @@ def main(){
         		section(){
         			app(name: "childZones", appName: "zonePlayerChild", namespace: "MikeMaxwell", description: "Create New Player Zone...", multiple: true)	
                 }
+            } else {
+            	section(){
+                	paragraph("Tap done to finish the initial installation.\nRe-open the app from the smartApps flyout to create your sound zones.")
+                }
             }
 	}
 }
