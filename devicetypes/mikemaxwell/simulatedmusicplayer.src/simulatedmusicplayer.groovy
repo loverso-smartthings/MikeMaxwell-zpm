@@ -17,8 +17,6 @@ metadata {
 	definition (name: "simulatedMusicPlayer", namespace: "MikeMaxwell", author: "Mike Maxwell") {
 		capability 	"Music Player"
         capability "Polling"   
- 		//command "tileSetLevel"			, ["number"]
-		//command "playTrackAtVolume"		, ["string","number"]
 		command "playTrackAndResume"	, ["string","number","number"]
 		command "playTextAndResume"		, ["string","number"]
 		command "playTrackAndRestore"	, ["string","number","number"]
@@ -27,7 +25,6 @@ metadata {
 	}
 
 	simulator {
-		// TODO: define status and reply messages here
 	}
 	tiles(scale: 2) {
   		multiAttributeTile(name:"switch", type:"generic", width:6, height:4, canChangeicon: true) {
@@ -55,34 +52,34 @@ def poll(){
 }
 //custom comands
 def playTrackAndResume(text,duration,level){
-	log.info "device playTrackAndResume- text: ${text}, ${duration}, level:${level}"
+	log.info "device playTrackAndResume- url:${text}, ${duration}, level:${level}"
     sendEvent(
     	name			: "cmd"
     	,value			: "playTrackAndResume"
         ,displayed		: false
         ,isStateChange	: true
-        ,data			: "${text},${duration},${level}"
+        ,data			: "${text}~${duration}~${level}"
     )    
 }
 
 def playTrackAndRestore(text,duration,level){
-	log.info "device playTrackAndRestore- text: ${text}, level:${level}"
+	log.info "device playTrackAndRestore- url:${text}, duration:${duration}, level:${level}"
     sendEvent(
     	name			: "cmd"
     	,value			: "playTrackAndRestore"
         ,displayed		: false
         ,isStateChange	: true
-        ,data			: "${text},${duration},${level}"
+        ,data			: "${text}~${duration}~${level}"
     )    
 }
 def playTextAndResume(text,level){
-	log.info "device playTextAndResume- text: ${text}, level:${level}"
+	log.info "device playTextAndResume- text:${text}, level:${level}"
     sendEvent(
     	name			: "cmd"
     	,value			: "playTextAndResume"
         ,displayed		: false
         ,isStateChange	: true
-        ,data			: "${text},${level}"
+        ,data			: "${text}~${level}"
     )    
 }
 
@@ -93,7 +90,7 @@ def playTextAndRestore(text,level){
     	,value			: "playTextAndRestore"
         ,displayed		: false
         ,isStateChange	: true
-        ,data			: "${text},${level}"
+        ,data			: "${text}~${level}"
     )
 }
 
@@ -123,8 +120,8 @@ def playTrack(Map trackData) {
 	// TODO: handle 'playTrack' command
 }
 
-def playTrack(String uri, metaData="") {
-	log.debug "'playTrack' command is not implemented, uri: ${uri}, metaData: ${metaData}"
+def playTrack(String url, metaData="") {
+	log.debug "'playTrack' command is not implemented, uri: ${url}, metaData: ${metaData}"
 	// TODO: handle 'playTrack' command
 }
 
@@ -159,8 +156,8 @@ def setTrack(Map trackData) {
 	// TODO: handle 'setTrack' command
 }
 
-def setTrack(String uri, metaData="") {
-	log.debug "'setTrack' command is not implemented, uri: ${uri}, metaData: ${metaData}"
+def setTrack(String url, metaData="") {
+	log.debug "'setTrack' command is not implemented, url: ${url}, metaData: ${metaData}"
 	// TODO: handle 'setTrack' command
 }
 
