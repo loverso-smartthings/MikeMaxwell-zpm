@@ -2,6 +2,8 @@
 	zonePlayerChild
     
  	Author: Mike Maxwell 2016
+    
+    1.0.0a 2016-05-07 added version info
 	    
 	This software if free for Private Use. You may use and modify the software without distributing it.
  
@@ -17,7 +19,7 @@ definition(
     name: "zonePlayerChild",
     namespace: "MikeMaxwell",
     author: "Mike Maxwell",
-    description: "child application 1.0.0 for 'Zone Player Manager', do not install directly.",
+    description: "child application for 'Zone Player Manager', do not install directly.",
     category: "My Apps",
     parent: "MikeMaxwell:Zone Player Manager",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
@@ -37,6 +39,8 @@ def updated() {
 }
 
 def initialize() {
+	state.vChild = "1.0.0a"
+    parent.updateVer(state.vChild)
     app.updateLabel("${settings.zoneName} Sound Zone") 
     state.clear()
 }
